@@ -1,7 +1,9 @@
 <template>
     <div class="negative-top">
         <ul>
-            <li>首页</li>
+            <li>
+                <i class="el-icon-s-home" />
+            </li>
             <li v-for="tag in tags">
                 {{ tag }}
             </li>
@@ -17,7 +19,7 @@
             </el-popover>
             <i class="el-icon-bell"></i>
             <i class="el-icon-goods"></i>
-            <i class="exit">退</i>
+            <i class="el-icon-switch-button"></i>
         </div>
     </div>
 </template>
@@ -43,7 +45,7 @@
             initTags() {
                 if (this.$route.path != "/") {
                     let titles = this.tiledRoutes?.filter(x => x.path == this.$route.path).map(x => x.titles)[0]
-                    this.tags = titles.map(x => ['>', x]).flatMap(x => x)
+                    this.tags = titles.map((x, index) => ['/', x]).flatMap(x => x)
                 }
             }
         },
@@ -69,42 +71,33 @@
             padding: 0;
             display: flex;
 
+            li:first-child {
+                margin-right: 10px
+            }
+
             li {
                 list-style-type: none;
                 display: flex;
                 align-items: center;
-                padding: 0 10px;
+                padding: 0 3px;
             }
         }
 
+        i {
+            margin-left: 20px;
+            cursor: pointer;
+            user-select: none;
+            transition: 0.1s all linear;
+        }
+
+        i::before {
+            font-size: 20px;
+        }
         .opear {
             position: absolute;
             right: 10px;
             display: flex;
             align-items: center;
-
-            .exit {
-                font-style: normal;
-                width: 18px;
-                height: 18px;
-                border-radius: 18px;
-                border: 1px solid #fff;
-                font-size: 12px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            i {
-                margin-left: 20px;
-                cursor: pointer;
-                user-select: none;
-                transition: 0.1s all linear;
-            }
-
-            i::before {
-                font-size: 20px;
-            }
 
             i:hover {
                 transition: .2s all linear;

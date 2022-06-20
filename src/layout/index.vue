@@ -46,6 +46,7 @@
         [role=left] {
             width: 15%;
             border-right:1px solid #e2e2e2;
+            background: linear-gradient(180deg, rgb(171, 220, 255) 10%, rgb(3, 150, 255) 100%);
         }
 
         [role=right] {
@@ -57,7 +58,7 @@
                 height: 50px;
                 display: flex;
                 align-items: center;
-                background: #4390ff;
+                background: linear-gradient(90deg, rgb(3, 150, 255) 0%,rgb(171, 220, 255) 60%, rgb(3, 150, 255) 100%);
                 color:#fff;
 
             }
