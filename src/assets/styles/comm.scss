@@ -1,0 +1,19 @@
+.el-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+}
+.el-table__header-wrapper .el-table__cell{
+    //background: lightgrey !important;
+    color: #565454;
+}
+.el-button{
+    padding: 7px 20px !important;
+}
+.el-form-item--small.el-form-item{
+    margin-bottom: 10px;
+}
+.el-input__inner,.el-textarea__inner{
+    padding:0 5px;
+}

@@ -6,7 +6,19 @@
                 {{ tag }}
             </li>
         </ul>
-
+        <div class="opear">
+            <el-popover
+                placement="top-start"
+                title="用户信息"
+                width="200"
+                trigger="hover"
+                :content="getUserInfo()">
+                <i class="el-icon-user-solid" slot="reference"></i>
+            </el-popover>
+            <i class="el-icon-bell"></i>
+            <i class="el-icon-goods"></i>
+            <i class="exit">退</i>
+        </div>
     </div>
 </template>
 
@@ -25,6 +37,9 @@
             }
         },
         methods: {
+            getUserInfo() {
+                return `姓名：${this.$store.getters.name} 年龄：5`
+            },
             cycleFind(initTag, x, path) {
                 if (x.path == path) {
                     initTag.push(x.meta.title)
@@ -64,6 +79,11 @@
 </script>
 <style lang="scss" scoped>
     .negative-top {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+
         ul {
             margin: 0;
             padding: 0;
@@ -73,8 +93,42 @@
                 list-style-type: none;
                 display: flex;
                 align-items: center;
-                padding: 10px;
-                color: #495060;
+                padding: 0 10px;
+            }
+        }
+
+        .opear {
+            position: absolute;
+            right: 10px;
+            display: flex;
+            align-items: center;
+
+            .exit {
+                font-style: normal;
+                width: 18px;
+                height: 18px;
+                border-radius: 18px;
+                border: 1px solid #fff;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            i {
+                margin-left: 20px;
+                cursor: pointer;
+                user-select: none;
+                transition: 0.1s all linear;
+            }
+
+            i::before {
+                font-size: 20px;
+            }
+
+            i:hover {
+                transition: .2s all linear;
+                transform: scale(1.5);
             }
         }
     }

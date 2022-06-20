@@ -14,22 +14,26 @@ import router from '@/router'
 /***
  * 以下为自定义内容
  */
+import '@/assets/styles/comm.scss'
 //自定义指令
 import directive from '@/directive'
 
 Vue.use(directive)
 //自定义公共函数库
-import {reRender, openDialog} from '@/utils/common'
+import {reRender, openDialog} from '@/utils/comm'
 import '@/utils/request'
 
 Vue.prototype.reRender = reRender
 Vue.prototype.openDialog = openDialog
 //自定义扩展ElementUI组件
-//1.扩展消息弹框组件
+
+//设置分页默认布局
+Element.Pagination.props.layout.default = 'sizes,prev, pager, next, jumper, ->, total'
+//扩展消息弹框组件
 Element.MessageBox.setDefaults({
     dangerouslyUseHTMLString: true
 })
-//2.扩展文本搜索框组件
+//扩展文本搜索框组件
 Object.assign(Element.Autocomplete.methods, {
     select(item) {
         this.$emit('input', item[this.valueKey])
@@ -58,7 +62,7 @@ Object.assign(Element.Autocomplete.methods, {
         }, this.$attrs.customData)
     }
 })
-//3.扩展下拉框组件
+//扩展下拉框组件
 Element.Select.methods.emitChange = function (val) {
     if (!valueEquals(this.value, val)) {
         this.$emit('change', val, this.$attrs.customData)

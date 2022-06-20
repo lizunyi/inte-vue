@@ -1,5 +1,6 @@
 <template>
     <div class="negative-left">
+        <div class="title">后台管理系统</div>
         <div v-for="(route,index) in routes" v-if="!route.hidden">
             <div class="item" @click="expandMenuName = route.name" :class="isActive(route) ? 'active' : ''">
                 <span>{{route.meta.title}}</span>
@@ -40,6 +41,16 @@
         cursor: pointer;
         user-select: none;
 
+        .title {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            font-size: 20px !important;
+            font-weight: bold;
+            justify-content: center;
+            /*background: #4390ff;*/
+        }
+
         .item {
             padding: 10px 20px;
             position: relative;
@@ -50,9 +61,6 @@
                 position: absolute;
                 right: 10px;
             }
-        }
-        .item.active{
-            /*background: #2e72c7;*/
         }
 
         ul {
@@ -73,11 +81,12 @@
 
             li.router-link-active {
                 box-shadow: 0px 0px 3px #4fa0fa;
-                background: #0a468d !important;
+                background: #4390ff !important;
+                color: #fff;
             }
 
             li:hover {
-                background: #1070e1;
+                background: rgba(#409EFF, 0.4);
             }
         }
 
