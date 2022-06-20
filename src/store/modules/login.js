@@ -1,6 +1,7 @@
 import {getToken, removeToken} from '@/utils/cookie'
 import {constantRoutes} from "@/router"
 import Layout from "@/layout";
+import de from "element-ui/src/locale/lang/de";
 
 function cycle(x) {
     if (x.component == "Layout") {
@@ -13,6 +14,34 @@ function cycle(x) {
     })
     return x
 }
+
+function transferRoutes(routes) {
+    function cycle(tiledRoutes, x, paths = [], names = [], titles = []) {
+        //path路径
+        paths.push(x.path)
+        //name路径
+        names.push(x.name)
+        //title路径
+        titles.push(x.meta.title)
+
+        tiledRoutes.push(
+            (function ({name, path, title = x.meta.title}) {
+                return {name, path, title, names, paths, titles}
+            })(x)
+        )
+
+        x?.children?.map(y => {
+            return cycle(tiledRoutes, y, Object.assign([], paths), Object.assign([], names), Object.assign([], titles))
+        })
+    }
+
+    let tiledRoutes = []
+    routes?.map(x => {
+        cycle(tiledRoutes, x)
+    })
+    return tiledRoutes
+}
+
 
 export const loadView = (view) => {
     if (process.env.NODE_ENV === 'development') {
@@ -28,7 +57,8 @@ const login = {
         name: '',
         roles: [],
         permissions: [],
-        routes: []
+        routes: [],
+        tiledRoutes: []
     },
     mutations: {
         SET_NAME: (state, name) => {
@@ -42,6 +72,9 @@ const login = {
         },
         SET_ROUTES: (state, routes) => {
             state.routes = constantRoutes.concat(routes)
+        },
+        SET_TILEDROUTES: (state, routes) => {
+            state.tiledRoutes = routes
         }
     },
     actions: {
@@ -64,12 +97,13 @@ const login = {
             return new Promise((resolve, reject) => {
                 axios.reqPost('/userInfo', {}, 'form').then(res => {
                     let routes = res?.data?.routes
-                    routes?.map(x=>{
+                    routes?.map(x => {
                         return cycle(x)
                     })
                     commit('SET_NAME', res?.data?.name)
                     commit('SET_ROLES', res?.data?.roles)
                     commit('SET_ROUTES', res?.data?.routes)
+                    commit('SET_TILEDROUTES', transferRoutes([...routes]))
                     commit('SET_PERMISSIONS', res?.data?.permissions)
                     resolve(res)
                 }).catch(error => {
@@ -84,6 +118,7 @@ const login = {
                     commit('SET_NAME', null)
                     commit('SET_ROLES', null)
                     commit('SET_ROUTES', null)
+                    commit('SET_TILEDROUTES', null)
                     commit('SET_PERMISSIONS', null)
                     removeToken()
                     resolve()

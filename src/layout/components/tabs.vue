@@ -18,43 +18,20 @@
 </template>
 
 <script>
-
     import {mapGetters} from "vuex";
 
     export default {
         name: 'LayoutTabs',
         computed: {
-            ...mapGetters(["routes"]),
-            visitedViews() {
-                return this.$store.state.tabViews.visitedViews
-            }
+            ...mapGetters(["tiledRoutes"]),
+            ...mapGetters(["visitedViews"])
         },
         methods: {
-            cycleFind(initTag, x, path) {
-                if (x.path == path) {
-                    if (initTag.length == 0) {
-                        initTag.push(x)
-                        return
-                    }
-                }
-                x?.children?.forEach(y => {
-                    return this.cycleFind(initTag, y, path) ?? null
-                })
-            },
             isActive(route) {
                 return route.fullPath === this.$route.fullPath
             },
-            initTags() {
-                if (this.$route.path != "/") {
-                    let initTag = []
-                    this.routes?.forEach(x => {
-                        this.cycleFind(initTag, x, this.$route.path)
-                    })
-                    this.$store.dispatch('tabViews/addVisitedView', initTag[0])
-                }
-            },
             addTags() {
-                if (this.$route.path && this.$route.path != "/") {
+                if (this.$route.path != "/") {
                     this.$store.dispatch('tabViews/addView', this.$route)
                 }
                 return false

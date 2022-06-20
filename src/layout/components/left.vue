@@ -2,7 +2,7 @@
     <div class="negative-left">
         <div class="title">后台管理系统</div>
         <div v-for="(route,index) in routes" v-if="!route.hidden">
-            <div class="item" @click="expandMenuName = route.name" :class="isActive(route) ? 'active' : ''">
+            <div class="item" @click="expandMenuName = [route.name]" :class="isActive(route) ? 'active' : ''">
                 <span>{{route.meta.title}}</span>
                 <i class="el-icon-caret-right " :class="isActive(route) ? 'rotate' : 'normal'"></i>
             </div>
@@ -22,16 +22,28 @@
     export default {
         name: 'LayoutLeft',
         computed: {
-            ...mapGetters(["routes"])
+            ...mapGetters(["routes"]),
+            ...mapGetters(["tiledRoutes"])
         },
         data() {
             return {
-                expandMenuName: null
+                expandMenuName: []
             }
         },
+        watch: {
+            $route() {
+                this.listenerRoute()
+            }
+        },
+        mounted() {
+            this.listenerRoute()
+        },
         methods: {
+            listenerRoute(){
+                this.expandMenuName = this.tiledRoutes?.filter(x => x.name == this.$route.name).flatMap(x => x.names)
+            },
             isActive(route) {
-                return route.name == this.expandMenuName
+                return this.expandMenuName.includes(route.name)
             }
         }
     }

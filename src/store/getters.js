@@ -5,6 +5,7 @@ const getters = {
     name: state => state.login.name,
     roles: state => state.login.roles,
     routes: state => state.login.routes,
+    tiledRoutes: state => state.login.tiledRoutes,
     permissions: state => state.login.permissions
 }
 export default getters

@@ -29,7 +29,7 @@
     export default {
         name: 'LayoutTop',
         computed: {
-            ...mapGetters(["routes"])
+            ...mapGetters(["tiledRoutes"])
         },
         data() {
             return {
@@ -40,30 +40,10 @@
             getUserInfo() {
                 return `姓名：${this.$store.getters.name} 年龄：5`
             },
-            cycleFind(initTag, x, path) {
-                if (x.path == path) {
-                    initTag.push(x.meta.title)
-                    initTag.push('>')
-                    return x
-                }
-                let o
-                x?.children?.forEach(y => {
-                    let p = this.cycleFind(initTag, y, path) ?? null
-                    if (p) o = p
-                })
-                if (o) {
-                    initTag.push(x.meta.title)
-                    initTag.push('>')
-                    return x
-                }
-            },
             initTags() {
                 if (this.$route.path != "/") {
-                    let initTag = []
-                    this.routes?.forEach(x => {
-                        this.cycleFind(initTag, x, this.$route.path)
-                    })
-                    this.tags = initTag.reverse()
+                    let titles = this.tiledRoutes?.filter(x => x.path == this.$route.path).map(x => x.titles)[0]
+                    this.tags = titles.map(x => ['>', x]).flatMap(x => x)
                 }
             }
         },
