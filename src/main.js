@@ -65,7 +65,7 @@ Object.assign(Element.Autocomplete.methods, {
 //扩展下拉框组件
 Element.Select.methods.emitChange = function (val) {
     if (!valueEquals(this.value, val)) {
-        this.$emit('change', val, this.$attrs.customData)
+        this.$emit('change', val, event?.target?.innerText, this.$attrs.customData)
     }
 }
 
