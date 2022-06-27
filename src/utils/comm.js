@@ -233,9 +233,9 @@ window.initCompare = function () {
             }
         },
         set: function (arr) {
-            for (let idx in arr) {
-                this.common(deepClone(arr[idx]))
-            }
+            arr.map(x=>{
+                this.common(deepClone(x))
+            })
             for (let key in this.map) {
                 let item = this.map[key]
                 if (item.tip) return true
@@ -272,14 +272,6 @@ window.initCompare = function () {
         },
         valid: function () {
             return formValid(this.map, 'newVal')
-        },
-        mergeKey: function (arr1, arr2) {
-            for (let i in arr2) {
-                let k = arr2[i]
-                if (!arr1.includes(k)) {
-                    arr1.push(k)
-                }
-            }
         }
     }
 }
@@ -290,10 +282,10 @@ window.initCompare = function () {
 window.sum = function (numberArray = []) {
     let sum = 0
     numberArray.map((x = 0) => {
-        if (x && !isNaN(x) && typeof x != 'number') {
-            x = parseFloat(x)
-        } else {
+        if (isNaN(x)) {
             x = 0
+        } else if (typeof x != 'number') {
+            x = parseFloat(x)
         }
         sum += x
     })
