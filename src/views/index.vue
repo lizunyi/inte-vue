@@ -1,26 +1,107 @@
 <template>
-    <div>
-        <div v-html="content"></div>
+    <div class="negative" v-loading="active.loading">
+        <div class="negative-left">
+            <ul>
+                <li v-for="(item,index) in table.menuList" @click="fnClickMenu(item)" >
+                    <div v-html="fnMenuPath(item)"></div>
+                </li>
+            </ul>
+        </div>
+        <div class="negative-main" v-html="editorContent"></div>
     </div>
 </template>
 
 <script>
+    import {mapGetters} from "vuex"
+
     export default {
         name: "index",
+        computed: {
+            ...mapGetters(["curModuleInfo"])
+        },
         components: {},
         data() {
             return {
-                content: null
+                active: {
+                    loading: 0,
+                    dialog: {}
+                },
+                table: {},
+                editorContent : null
             }
         },
-        mounted() {
-            this.content = "<h2 id=\"jei5j\"><p>支持新增和更新员工信息/用车规则,仅支持单条导入,更新员工信息以手机号或者外部用户Id为唯一标识</p><p>该接口适用于支使用绿色公务APP叫车、免登企业H5叫车</p><p><strong>请求地址：</strong>&nbsp;/v2/common/addOrUpdateCompanyEmpV2</p><p><strong>服务协议：</strong>&nbsp;HTTP/POST</p><p><strong>Content-Type：</strong>&nbsp;application/x-www-form-urlencoded</p><p>q</p></h2>"
+        watch: {
+            curModuleInfo: function (newVal, oldVal) {
+                this.loadTable(newVal)
+            }
         },
-        methods: {}
+        methods: {
+            loadTable(curModuleInfo) {
+                axios
+                    .before(() => this.active.loading++)
+                    .reqPost('/menu/search', {moduleId: curModuleInfo.id})
+                    .then(res => this.fnCyclePath(res?.data))
+                    .then(res => this.table.menuList = res)
+                    .finally(() => this.active.loading--)
+            },
+            fnCyclePath(data) {
+                this.fnCycle(data, 0, 0)
+                return data
+            },
+            fnCycle(data, parentId, parentLevel, parentLevelLabel) {
+                data?.filter(x => x.parentId == parentId).map((x, index) => {
+                    x.level = parentLevel + 1
+                    x.index = index
+                    x.levelLabel = (parentLevelLabel ? parentLevelLabel + '.' : '') + (index + 1)
+                    this.fnCycle(data, x.id, x.level, x.levelLabel)
+                })
+            },
+            fnMenuPath(row) {
+                return '<span style="margin-left:' + (row.level * 20) + 'px">' + (row.levelLabel) + ' ' + row.menuName + '</span>'
+            },
+            fnClickMenu(row) {
+                axios
+                    .reqPost('/menu/searchId', {id: row.id})
+                    .then(res => this.editorContent = res?.data.content)
+            }
+        }
     }
 </script>
 
 <style lang="scss" scoped>
+    .negative {
+        display: flex;
+        width: 100%;
+        margin-top: 40px;
 
+        .negative-left {
+            background: #f8f8f8;
+            width: 20%;
+
+            ul {
+                padding: 0;
+                margin: 0;
+            }
+
+            li {
+                list-style-type: none;
+                padding: 12px 5px;
+                margin: 0;
+                border-left: 5px solid transparent;
+            }
+
+            li:hover {
+                background: #fff;
+                cursor: pointer;
+                border-left: 5px solid #5a6166;
+            }
+        }
+
+        .negative-main {
+            width: 80%;
+            display: flex;
+            margin-left: 60px;
+        }
+    }
 </style>
 

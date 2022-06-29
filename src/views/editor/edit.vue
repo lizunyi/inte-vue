@@ -1,5 +1,5 @@
 <template>
-    <div id="wangeditor">
+    <div>
         <div ref="editorElem" class="editor"></div>
         <el-row class="editor-btn">
             <el-button type="primary" @click="save">提交</el-button>
@@ -20,24 +20,22 @@
                     dialog: {}
                 },
                 editIns: {},
-                editorContent: ''
+                editorContent : null
             }
         },
         props: {
             editMenuInfo: {
                 type: Object,
-                default: () => {
-                }
-            },
-            content: {
-                type: String,
-                default: () => ""
+                default: () => {}
             }
         },
-        watch: {
-            content() {
-                this.editIns.txt.html(this.content)
-            }
+        created() {
+            axios
+                .before(() => this.active.loading++)
+                .reqPost('/menu/searchId', {id: this.editMenuInfo.id})
+                .then(res => this.editorContent = res?.data.content)
+                .then(res => this.editIns.txt.html(res))
+                .finally(() => this.active.loading--)
         },
         mounted() {
             this.editIns = new E(this.$refs.editorElem);
@@ -47,6 +45,7 @@
                 uploadImgMaxLength: 1,
             }
             this.editIns.create()
+            this.editIns.txt.html(this.editorContent)
         },
         methods: {
             save() {

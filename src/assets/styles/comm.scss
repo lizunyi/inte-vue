@@ -45,3 +45,8 @@
         padding: 0px;
     }
 }
+.error {
+    .el-input__inner, .el-textarea__inner {
+        border-color: #FF0000 !important;
+    }
+}

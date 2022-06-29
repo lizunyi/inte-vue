@@ -2,11 +2,8 @@
     <nav role="layout">
         <LayoutTop role="top"></LayoutTop>
         <nav role="bottom">
-            <nav role="left">
-                <LayoutLeft></LayoutLeft>
-            </nav>
             <nav role="main">
-                <LayoutMain ></LayoutMain>
+                <LayoutMain></LayoutMain>
             </nav>
         </nav>
     </nav>
@@ -14,13 +11,12 @@
 
 <script>
 
-    import {LayoutLeft,LayoutMain, LayoutTop} from './components'
+    import {LayoutMain, LayoutTop} from './components'
 
     export default {
         name: 'Layout',
         components: {
             LayoutMain,
-            LayoutLeft,
             LayoutTop
         }
     }
@@ -32,30 +28,21 @@
         background: #fff;
 
         [role=top] {
-            height: 60px;
+            height: 7%;
             display: flex;
             align-items: center;
             background: #404040;
             color: #fff;
         }
 
-        [role=bottom] {
+        [role=main] {
+            width: 70%;
+            border-radius: 5px;
+            padding: 10px;
             display: flex;
-            width: 60%;
-            margin: 40px auto;
-
-            [role=main] {
-                width: 80%;
-                border-radius: 5px;
-                padding: 10px;
-                display: flex;
-                margin: 0 auto;
-            }
-
-            [role=left] {
-                background: #f8f8f8;
-                width: 30%;
-            }
+            margin-left: 15%;
+            position: absolute;
+            height: 90%;
         }
     }
 </style>

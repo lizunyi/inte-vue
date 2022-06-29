@@ -1,7 +1,6 @@
 import {getToken, removeToken} from '@/utils/cookie'
 import {constantRoutes} from "@/router"
 import Layout from "@/layout";
-import de from "element-ui/src/locale/lang/de";
 
 function cycle(x) {
     if (x.component == "Layout") {
@@ -41,7 +40,6 @@ function transferRoutes(routes) {
     })
     return tiledRoutes
 }
-
 
 export const loadView = (view) => {
     if (process.env.NODE_ENV === 'development') {

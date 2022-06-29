@@ -35,17 +35,17 @@ export const constantRoutes = [
     },
     {
         component: Layout2,
-        path:'/',
-        children:[{
-            component: () => import('@/views/list'),
-            path: '/list'
+        path: '/',
+        children: [{
+            component: () => import('@/views/manager'),
+            path: '/manager'
         }],
         hidden: true
     },
     {
         component: Layout,
-        path:'/',
-        children:[{
+        path: '/',
+        children: [{
             component: () => import('@/views/index'),
             path: '/index'
         }],
@@ -67,7 +67,7 @@ const router = new Router({
 });
 
 //路由拦截器
-const whiteList = ['/login','/index','/list']
+const whiteList = ['/login', '/index', '/manager']
 router.beforeEach((to, from, next) => {
     if (getToken()) {
         if (to.path === '/login') {

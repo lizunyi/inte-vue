@@ -6,18 +6,19 @@
                 <el-radio label="2">菜单</el-radio>
             </el-radio-group>
         </el-form-item>
-        <el-form-item label="选择模块" v-if="form.isModuleMenu == 2">
-            <el-select v-model="form.moduleId" placeholder="选择模块" clearable filterable>
+        <el-form-item label="选择模块" v-if="form.isModuleMenu == 2" :required="true">
+            <el-select v-model="form.moduleId" placeholder="选择模块" :class="classes('moduleId')" clearable filterable>
                 <el-option v-for="(item, index) in init.moduleList" :label="item.label" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
         <el-form-item label="父级菜单" v-if="form.isModuleMenu == 2">
-            <el-select v-model="form.parentId" placeholder="父级菜单" clearable filterable>
+            <el-select v-model="form.parentId" placeholder="父级菜单" :class="classes('parentId')" clearable
+                       filterable>
                 <el-option v-for="(item, index) in init.menuList" :label="item.label" :value="item.value"></el-option>
             </el-select>
         </el-form-item>
-        <el-form-item label="名称">
-            <el-input v-model="form.moduleMenuName"/>
+        <el-form-item label="名称" :required="true">
+            <el-input v-model="form.moduleMenuName" :class="classes('moduleMenuName')"/>
         </el-form-item>
         <el-row style="margin-top:20px;text-align:center">
             <el-button @click="save" type="success">确定</el-button>
@@ -33,7 +34,9 @@
         data() {
             return {
                 active: {
-                    loading: false
+                    loading: false,
+                    allowEdit: false,
+                    editStyle: [],
                 },
                 form: {},
                 init: {}
@@ -43,6 +46,16 @@
         },
         mounted() {
             this.loadData()
+        },
+        computed: {
+            classes() {
+                return (prop) => {
+                    if (this.active.editStyle.includes(prop)) {
+                        return ['error']
+                    }
+                    return ['']
+                }
+            }
         },
         methods: {
             hide() {
@@ -67,11 +80,11 @@
                 ]
                 Promise.all(future)
                     .then((result = []) => {
-                        this.init.moduleList = result.filter(x => x.flag == 1).flatMap(x=> x?.data).map(x => {
+                        this.init.moduleList = result.filter(x => x.flag == 1).flatMap(x => x?.data).map(x => {
                             return {value: String(x.id), label: x.moduleName}
                         }) ?? []
                         console.log(this.init.moduleList)
-                        this.init.menuList = result.filter(x => x.flag == 2).flatMap(x=> x?.data).map(x => {
+                        this.init.menuList = result.filter(x => x.flag == 2).flatMap(x => x?.data).map(x => {
                             return {value: String(x.id), label: x.menuName}
                         }) ?? []
                     })
@@ -79,12 +92,23 @@
             },
             save() {
                 let reqData = {}
+                this.active.editStyle = []
                 if (this.form.isModuleMenu == 1) {
                     reqData.moduleName = this.form.moduleMenuName
                 } else if (this.form.isModuleMenu == 2) {
                     reqData.menuName = this.form.moduleMenuName
                     reqData.parentId = this.form.parentId
                     reqData.moduleId = this.form.moduleId
+                    if (!reqData.moduleId) {
+                        this.active.editStyle.push('moduleId')
+                    }
+                }
+
+                if (!this.form.moduleMenuName) {
+                    this.active.editStyle.push('moduleMenuName')
+                }
+                if (this.active.editStyle.length > 0) {
+                    return
                 }
 
                 axios
