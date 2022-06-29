@@ -8,6 +8,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+import Layout2 from '@/layout/layout2'
 
 // 公共路由
 export const constantRoutes = [
@@ -23,11 +24,6 @@ export const constantRoutes = [
         ]
     },
     {
-        path: '/login',
-        component: () => import('@/views/login'),
-        hidden: true
-    },
-    {
         path: '/404',
         component: () => import('@/views/error/404'),
         hidden: true
@@ -35,6 +31,24 @@ export const constantRoutes = [
     {
         path: '/401',
         component: () => import('@/views/error/401'),
+        hidden: true
+    },
+    {
+        component: Layout2,
+        path:'/',
+        children:[{
+            component: () => import('@/views/list'),
+            path: '/list'
+        }],
+        hidden: true
+    },
+    {
+        component: Layout,
+        path:'/',
+        children:[{
+            component: () => import('@/views/index'),
+            path: '/index'
+        }],
         hidden: true
     }
 ]
@@ -53,7 +67,7 @@ const router = new Router({
 });
 
 //路由拦截器
-const whiteList = ['/login']
+const whiteList = ['/login','/index','/list']
 router.beforeEach((to, from, next) => {
     if (getToken()) {
         if (to.path === '/login') {

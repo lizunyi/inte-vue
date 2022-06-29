@@ -32,7 +32,8 @@
         "js-cookie": "^3.0.1",
         "vue": "2.6.12",
         "vue-router": "3.4.9",
-        "vuex": "3.6.0"
+        "vuex": "3.6.0",
+        "wangeditor": "^4.7.15"
     },
     "devDependencies": {
         "@vue/cli-plugin-babel": "4.4.6",

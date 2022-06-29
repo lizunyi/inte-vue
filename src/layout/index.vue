@@ -1,17 +1,12 @@
 <template>
     <nav role="layout">
-        <nav role="left">
-            <LayoutLeft></LayoutLeft>
-        </nav>
-        <nav role="right">
-            <nav role="top">
-                <LayoutTop></LayoutTop>
-            </nav>
-            <nav role="tabs">
-                <LayoutTabs></LayoutTabs>
+        <LayoutTop role="top"></LayoutTop>
+        <nav role="bottom">
+            <nav role="left">
+                <LayoutLeft></LayoutLeft>
             </nav>
             <nav role="main">
-                <LayoutMain></LayoutMain>
+                <LayoutMain ></LayoutMain>
             </nav>
         </nav>
     </nav>
@@ -19,66 +14,48 @@
 
 <script>
 
-    import {LayoutLeft, LayoutTabs, LayoutMain, LayoutTop} from './components'
+    import {LayoutLeft,LayoutMain, LayoutTop} from './components'
 
     export default {
         name: 'Layout',
         components: {
-            LayoutLeft,
-            LayoutTabs,
             LayoutMain,
+            LayoutLeft,
             LayoutTop
         }
     }
 </script>
-<style lang="scss">
-    * {
-        font-size: 13px !important;
-        font-family: 宋体 !important;
-    }
+<style lang="scss" scoped>
 
     [role=layout] {
-        display: flex;
         height: 100%;
-        flex: 1 1 auto;
         background: #fff;
 
-        [role=left] {
-            width: 15%;
-            border-right:1px solid #e2e2e2;
-            background: linear-gradient(45deg, rgb(3, 150, 255) 0%,rgb(171, 220, 255) 30%, rgb(3, 150, 255) 100%);
+        [role=top] {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            background: #404040;
+            color: #fff;
         }
 
-        [role=right] {
-            width: 85%;
+        [role=bottom] {
             display: flex;
-            flex-direction: column;
-
-            [role=top] {
-                height: 50px;
-                display: flex;
-                align-items: center;
-                background: linear-gradient(90deg, rgb(3, 150, 255) 0%,rgb(171, 220, 255) 60%, rgb(3, 150, 255) 100%);
-                color:#fff;
-
-            }
-
-            [role=tabs] {
-                height: 40px;
-                border-radius: 5px;
-                align-items: center;
-                display: flex;
-            }
+            width: 60%;
+            margin: 40px auto;
 
             [role=main] {
-                width: 98%;
+                width: 80%;
                 border-radius: 5px;
                 padding: 10px;
-                background: linear-gradient(#f3f3f3 1%, 3%, #fff);
-                box-shadow: 10px -3px 10px #e0dfdf;
-                flex: 1 1 auto;
+                display: flex;
+                margin: 0 auto;
+            }
+
+            [role=left] {
+                background: #f8f8f8;
+                width: 30%;
             }
         }
     }
-
 </style>
