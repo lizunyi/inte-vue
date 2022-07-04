@@ -64,9 +64,8 @@ router.beforeEach((to, from, next) => {
                     router.addRoutes(res?.data?.routes)
                     next({...to, replace: true})
                 }).catch(err => {
-                    store.dispatch('LogOut').then(() => {
-                        Message.error(err)
-                        next({path: '/'})
+                    store.dispatch('LogOut').finally(() => {
+                        next({ path: '/login' })
                     })
                 })
             } else {
@@ -74,7 +73,7 @@ router.beforeEach((to, from, next) => {
             }
         }
     } else {
-        if (whiteList.indexOf(to.path) !== -1) {
+        if (whiteList.includes(to.path)) {
             next()
         } else {
             next(`/login?redirect=${to.fullPath}`)
