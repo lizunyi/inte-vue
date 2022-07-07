@@ -35,7 +35,6 @@
             return {
                 active: {
                     loading: false,
-                    allowEdit: false,
                     editStyle: [],
                 },
                 form: {},
@@ -115,12 +114,12 @@
                     .before(() => this.active.loading++)
                     .reqPost(['', '/module/insert', '/menu/insert'][this.form.isModuleMenu], reqData)
                     .then(res => {
-                        if (res?.code == 0) {
+                        if (res.code == 0) {
                             this.hide()
                             this.$emit('refresh')
                             this.$alert('已提交')
                         } else {
-                            this.$alert(res?.msg)
+                            this.$alert(res.msg)
                         }
                     })
                     .finally(() => this.active.loading--)

@@ -33,7 +33,7 @@
             axios
                 .before(() => this.active.loading++)
                 .reqPost('/menu/searchId', {id: this.editMenuInfo.id})
-                .then(res => this.editorContent = res?.data.content)
+                .then(res => this.editorContent = res.data.content)
                 .then(res => this.editIns.txt.html(res))
                 .finally(() => this.active.loading--)
         },
@@ -56,10 +56,10 @@
                         content: this.editIns.txt.html()
                     })
                     .then(res => {
-                        if (res?.code == 0) {
+                        if (res.code == 0) {
                             this.$message.success('已提交')
                         } else {
-                            this.$alert(res?.msg)
+                            this.$alert(res.msg)
                         }
                     })
                     .finally(() => this.active.loading--)
@@ -77,11 +77,14 @@
 <style lang="scss">
     .editor {
         width: 100%;
-        height: 100%;
+        height: 93%;
         position: absolute;
 
         .w-e-text-container {
             height: 85% !important;
+        }
+        .w-e-toolbar p, .w-e-text-container p, .w-e-menu-panel p{
+            font-size:inherit !important;
         }
     }
 

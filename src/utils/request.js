@@ -42,7 +42,7 @@ window.axios = {
 axo.interceptors.request.use(config => {
     return config
 }, error => {
-    Message.error('服务器异常')
+    console.log(error)
     return Promise.reject(error || '服务器异常')
 })
 
@@ -59,18 +59,18 @@ axo.interceptors.response.use(res => {
     }
 
     if (status == 500) {
-        Message.error('服务器异常')
+        console.log(res.data.msg)
         return Promise.reject(res.data.msg || '服务器异常')
     } else {
         return res.data
     }
 }, error => {
     if (error.response.status == 401) {
-        Message.error('会话超时，请重新登录')
+        Message.error('登录超时，请重新登录')
         setTimeout(()=>{
             router.push('/login')
         },2000)
-        return Promise.reject('会话超时，请重新登录')
+        return Promise.reject('登录超时，请重新登录')
     } else if (error.response.status == 403) {
         Message.error('没有权限')
         return Promise.reject('没有权限')

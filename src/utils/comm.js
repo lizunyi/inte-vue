@@ -3,7 +3,7 @@
  * Copyright (c) 2019
  */
 
-window.parseDate = function (time, pattern) {
+window.parseDate = function(time, pattern) {
     if (arguments.length === 0 || !time) {
         return null
     }
@@ -37,7 +37,7 @@ window.parseDate = function (time, pattern) {
     return date_str
 }
 
-window.parseTime = function (time, pattern) {
+window.parseTime = function(time, pattern) {
     if (arguments.length === 0 || !time) {
         return null
     }
@@ -49,7 +49,7 @@ window.parseTime = function (time, pattern) {
         if ((typeof time === 'string') && (/^[0-9]+$/.test(time))) {
             time = parseInt(time)
         } else if (typeof time === 'string') {
-            time = time.replace(new RegExp(/-/gm), '/').replace('T', ' ').replace(new RegExp(/\.[\d]{3}/gm), '');
+            time = time.replace(new RegExp(/-/gm), '/').replace('T', ' ').replace(new RegExp(/\.[\d]{3}/gm), '')
         }
         if ((typeof time === 'number') && (time.toString().length === 10)) {
             time = time * 1000
@@ -79,7 +79,7 @@ window.parseTime = function (time, pattern) {
     return time_str
 }
 
-window.params = function (params) {
+window.params = function(params) {
     let result = []
     for (const propName of Object.keys(params)) {
         const value = params[propName]
@@ -99,13 +99,12 @@ window.params = function (params) {
     return result.join('&')
 }
 
-
 /***
  * 数组转KV
  * @param arr
  * @returns {{}}
  */
-window.arr2kv = function (arr = []) {
+window.arr2kv = function(arr = []) {
     let map = {}
     arr.map(x => {
         let val = String(x.value)
@@ -125,7 +124,7 @@ window.arr2kv = function (arr = []) {
  * @param arr
  * @returns {{}}
  */
-window.arr2map = function (arr = [], keyName, valueName) {
+window.arr2map = function(arr = [], keyName, valueName) {
     let map = {}
     arr.map(x => {
         let key = String(x[keyName])
@@ -188,7 +187,7 @@ function formValid(map, valueProp) {
 function getValueByType(val) {
     let v = val
     if (v) {
-        let type = isArray(v) ? 'array' : (typeof v == 'object' ? 'object' : 'string')
+        let type = Array.isArray(v) ? 'array' : (typeof v == 'object' ? 'object' : 'string')
         if (type == 'array') {
             v = String(v)
         } else if (type == 'object') {
@@ -206,13 +205,13 @@ function getValueByType(val) {
  * @type
  * fixed 使用get时每次都返回原值
  */
-window.initCompare = function () {
+window.initCompare = function() {
     return {
         map: {},
-        reset: function () {
+        reset: function() {
             this.map = {}
         },
-        common: function ({key, val, label, valid, fixed = false, logger = false}) {
+        common: function({ key, val, label, valid, fixed = false, logger = false }) {
             let item = this.map[key]
             if (!item) {
                 this.map[key] = {
@@ -232,8 +231,8 @@ window.initCompare = function () {
                 }
             }
         },
-        set: function (arr) {
-            arr.map(x=>{
+        set: function(arr) {
+            arr.map(x => {
                 this.common(deepClone(x))
             })
             for (let key in this.map) {
@@ -242,7 +241,7 @@ window.initCompare = function () {
             }
             return false
         },
-        get: function () {
+        get: function() {
             let obj = {}
             for (let key in this.map) {
                 let item = this.map[key]
@@ -256,7 +255,7 @@ window.initCompare = function () {
             }
             return obj
         },
-        log: function () {
+        log: function() {
             let arr = []
             for (let key in this.map) {
                 let item = this.map[key]
@@ -270,16 +269,34 @@ window.initCompare = function () {
             }
             return arr.length > 0 ? arr : null
         },
-        valid: function () {
+        valid: function() {
             return formValid(this.map, 'newVal')
         }
     }
 }
 
+window.deepClone = function(source) {
+    if (!source ?? null) {
+        return source
+    }
+    if (source.constructor !== Array && typeof source !== 'object') {
+        return source
+    }
+    const targetObj = source.constructor === Array ? [] : {}
+    Object.keys(source).forEach(keys => {
+        if (source[keys] && typeof source[keys] === 'object') {
+            targetObj[keys] = deepClone(source[keys])
+        } else {
+            targetObj[keys] = source[keys]
+        }
+    })
+    return targetObj
+}
+
 /***
  * 计算累和函数
  */
-window.sum = function (numberArray = []) {
+window.sum = function(numberArray = []) {
     let sum = 0
     numberArray.map((x = 0) => {
         if (isNaN(x)) {
@@ -292,7 +309,7 @@ window.sum = function (numberArray = []) {
     return sum
 }
 
-Array.prototype.distinct = function () {
+Array.prototype.distinct = function() {
     let arr = this
     let result = []
     arr?.filter(x => x).map(x => !result.includes(x) ? result.push(x) : '')

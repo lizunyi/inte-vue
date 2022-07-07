@@ -1,53 +1,5 @@
-import {getToken, removeToken} from '@/utils/cookie'
-import {constantRoutes} from "@/router"
-import Layout from "@/layout";
-
-function cycle(x) {
-    if (x.component == "Layout") {
-        x.component = Layout
-    } else if (x.component) {
-        x.component = loadView(`${x.component}`)
-    }
-    x?.children?.map(y => {
-        return cycle(y)
-    })
-    return x
-}
-
-function transferRoutes(routes) {
-    function cycle(tiledRoutes, x, paths = [], names = [], titles = []) {
-        //path路径
-        paths.push(x.path)
-        //name路径
-        names.push(x.name)
-        //title路径
-        titles.push(x.meta.title)
-
-        tiledRoutes.push(
-            (function ({name, path, title = x.meta.title}) {
-                return {name, path, title, names, paths, titles}
-            })(x)
-        )
-
-        x?.children?.map(y => {
-            return cycle(tiledRoutes, y, Object.assign([], paths), Object.assign([], names), Object.assign([], titles))
-        })
-    }
-
-    let tiledRoutes = []
-    routes?.map(x => {
-        cycle(tiledRoutes, x)
-    })
-    return tiledRoutes
-}
-
-export const loadView = (view) => {
-    if (process.env.NODE_ENV === 'development') {
-        return (resolve) => require([`@/views/${view}`], resolve)
-    } else {
-        return () => import(`@/views/${view}`)
-    }
-}
+import { getToken, setToken, removeToken } from '@/utils/cookie'
+import { constantRoutes } from '@/router'
 
 const login = {
     state: {
@@ -56,7 +8,8 @@ const login = {
         roles: [],
         permissions: [],
         routes: [],
-        tiledRoutes: []
+        tiledRoutes: [],
+        moduleList: []
     },
     mutations: {
         SET_NAME: (state, name) => {
@@ -73,36 +26,37 @@ const login = {
         },
         SET_TILEDROUTES: (state, routes) => {
             state.tiledRoutes = routes
+        },
+        SET_MODULE: (state, moduleList) => {
+            state.moduleList = moduleList
         }
     },
     actions: {
         // 登录
-        Login({commit}, userInfo) {
+        Login({ commit }, userInfo) {
             const username = userInfo.username
             const password = userInfo.password
             return new Promise((resolve, reject) => {
-                axios.reqPost('/login', {
+                axios.reqPost('/user/login', {
                     username, password
-                }, 'form').then(res => {
-                    resolve()
+                }).then(res => {
+                    if (res.code == 0) {
+                        commit('SET_NAME', username)
+                        setToken('username', username)
+                        resolve(res)
+                    } else {
+                        reject(res.msg)
+                    }
                 }).catch(error => {
                     reject(error)
                 })
             })
         },
         // 获取用户信息
-        GetInfo({commit, state}) {
+        GetInfo({ commit, state }) {
             return new Promise((resolve, reject) => {
-                axios.reqPost('/userInfo', {}, 'form').then(res => {
-                    let routes = res?.data?.routes
-                    routes?.map(x => {
-                        return cycle(x)
-                    })
-                    commit('SET_NAME', res?.data?.name)
-                    commit('SET_ROLES', res?.data?.roles)
-                    commit('SET_ROUTES', res?.data?.routes)
-                    commit('SET_TILEDROUTES', transferRoutes([...routes]))
-                    commit('SET_PERMISSIONS', res?.data?.permissions)
+                axios.reqPost('/module/search').then(res => {
+                    commit('SET_MODULE', res?.data)
                     resolve(res)
                 }).catch(error => {
                     reject(error)
@@ -110,18 +64,16 @@ const login = {
             })
         },
         // 退出系统
-        LogOut({commit, state}) {
+        LogOut({ commit, state }) {
             return new Promise((resolve, reject) => {
-                axios.reqGet('/logout').then(() => {
-                    commit('SET_NAME', null)
-                    commit('SET_ROLES', null)
-                    commit('SET_ROUTES', null)
-                    commit('SET_TILEDROUTES', null)
-                    commit('SET_PERMISSIONS', null)
-                    removeToken()
+                axios.reqGet('/user/logout').then(() => {
+                    commit('SET_MODULE', null)
+                    removeToken('username')
                     resolve()
                 }).catch(error => {
                     reject(error)
+                }).finally(() => {
+                    removeToken('username')
                 })
             })
         }

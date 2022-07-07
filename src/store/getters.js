@@ -7,6 +7,7 @@ const getters = {
     routes: state => state.login.routes,
     tiledRoutes: state => state.login.tiledRoutes,
     permissions: state => state.login.permissions,
+    moduleList: state => state.login.moduleList,
     curModuleInfo: state => state.module.curModuleInfo
 }
 export default getters

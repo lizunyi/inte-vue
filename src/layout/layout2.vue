@@ -27,7 +27,7 @@
         background: #fff;
 
         [role=top] {
-            height: 60px;
+            height: 70px;
             display: flex;
             align-items: center;
             background: #404040;
