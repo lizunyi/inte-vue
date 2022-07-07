@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import { Message } from 'element-ui'
-import store from '@/store'
+import router from '@/router'
 
 const axo = axios.create({
     baseURL: process.env.VUE_APP_API_BASE_URL, timeout: 30000
@@ -66,8 +66,11 @@ axo.interceptors.response.use(res => {
     }
 }, error => {
     if (error.response.status == 401) {
-        Message.error('请登录')
-        return Promise.reject('请登录')
+        Message.error('会话超时，请重新登录')
+        setTimeout(()=>{
+            router.push('/login')
+        },2000)
+        return Promise.reject('会话超时，请重新登录')
     } else if (error.response.status == 403) {
         Message.error('没有权限')
         return Promise.reject('没有权限')
