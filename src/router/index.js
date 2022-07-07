@@ -62,7 +62,6 @@ Router.prototype.push = function push(location) {
 const router = new Router({
     mode: 'hash',
     base: process.env.VUE_APP_BASE,
-    scrollBehavior: () => ({y: 0}),
     routes: constantRoutes
 });
 
